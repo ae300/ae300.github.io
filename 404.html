@@ -11,22 +11,26 @@
         body {
             width: 100vw;
             height: 100vh;
-            background-color: #ffffff; /* 页面整体白底 */
+            background-color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1200px; /* 3D透视景深 */
+            perspective: 1200px;
         }
         .text-wrap {
             font-size: 90px;
             font-family: Arial, Helvetica, sans-serif;
-            color: #000000;
-            background-color: #cccccc; /* 文字块灰色底色 */
-            padding: 20px 40px;
-            transform-style: preserve-3d; /* 保留3D空间 */
+            color: #FFFFFF;
+            background-color: #165DFF;
+            padding: 30px 50px;
+            text-align: center;
+            transform-style: preserve-3d;
             animation: rotateSlow 12s linear infinite;
         }
-        /* 沿纵轴Y轴完整360° 3D旋转 */
+        .cn-text {
+            font-size: 50px;
+            margin-top: 15px;
+        }
         @keyframes rotateSlow {
             0% {
                 transform: rotateY(0deg);
@@ -38,6 +42,9 @@
     </style>
 </head>
 <body>
-    <div class="text-wrap">404 Not Found</div>
+    <div class="text-wrap">
+        404 File Not Found
+        <div class="cn-text">未找到指定文件</div>
+    </div>
 </body>
 </html>

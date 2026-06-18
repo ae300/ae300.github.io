@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>生日贺卡 完整版七页</title>
+<title>生日贺卡 完整版七页 兼容2018Edge</title>
 <style type="text/css">
 * {
     margin: 0;
@@ -13,7 +13,6 @@ body {
     background: #cccccc;
     padding: 40px;
 }
-/* 统一PDF竖版A4页面 */
 .pdf-page {
     width: 595px;
     height: 842px;
@@ -23,12 +22,14 @@ body {
     position: relative;
     overflow: hidden;
 }
-/* ==========第一页样式========== */
-.page1::before {
-    content: "";
+/* ==========第一页 修复inset兼容 ========== */
+.page1 .bg-layer {
     position: absolute;
-    inset: 0;
-    background: url('https://djm.pages.dev/b/bg.png') no-repeat center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://djm.pages.dev/b/bg.png') no-repeat center center;
     background-size: cover;
     opacity: 0.6;
     z-index: 1;
@@ -85,8 +86,8 @@ body {
     100% { transform: rotate(-360deg); }
 }
 @-webkit-keyframes antiRotate {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(-360deg); }
+    0% { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(-360deg); transform: rotate(-360deg); }
 }
 /* ==========第二页蛋糕页========== */
 .cake-img {
@@ -97,6 +98,7 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
+    -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
 .cake-text {
@@ -147,9 +149,13 @@ body {
 .page4 {
     animation: bgRainbow 5s linear infinite;
     -webkit-animation: bgRainbow 5s linear infinite;
+    display: -webkit-box;
     display: flex;
+    -webkit-box-orient: vertical;
     flex-direction: column;
+    -webkit-box-align: center;
     align-items: center;
+    -webkit-box-pack: center;
     justify-content: center;
     gap: 120px;
 }
@@ -177,19 +183,21 @@ body {
     text-shadow:
         3px 3px 0 #0099ff,
         6px 6px 0 #22ff99,
-        9px 9px 12px rgba(0,0,0.35);
+        9px 9px 12px rgba(0,0,0,0.35);
     letter-spacing: 8px;
 }
-/* ==========第五、第七页共用文本页面样式========== */
+/* ==========第五、第七页共用文本页面样式 修复inset ========== */
 .text-page {
     position: relative;
 }
 .lotusBgMask {
     display: none;
-    content: "";
     position: absolute;
-    inset: 0;
-    background: url('https://djm.pages.dev/b/lotus.png') no-repeat center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://djm.pages.dev/b/lotus.png') no-repeat center center;
     background-size: cover;
     opacity: 0.3;
     z-index: 1;
@@ -200,8 +208,11 @@ body {
     left: 40px;
     right: 40px;
     bottom: 40px;
+    display: -webkit-box;
     display: flex;
+    -webkit-box-align: center;
     align-items: center;
+    -webkit-box-pack: center;
     justify-content: center;
     z-index: 2;
 }
@@ -270,9 +281,13 @@ body {
 .page6 {
     animation: randomJump 0.2s step-end infinite;
     -webkit-animation: randomJump 0.2s step-end infinite;
+    display: -webkit-box;
     display: flex;
+    -webkit-box-orient: vertical;
     flex-direction: column;
+    -webkit-box-align: center;
     align-items: center;
+    -webkit-box-pack: center;
     justify-content: center;
     gap: 120px;
     font-size: 96px;
@@ -287,8 +302,9 @@ body {
 </style>
 </head>
 <body>
-    <!-- 第一页 -->
+    <!-- 第一页 替换伪元素为独立div，修复老Edge背景失效 -->
     <div class="pdf-page page1">
+        <div class="bg-layer"></div>
         <div class="rotate-wrap">
             <div class="word1">谭静怡，</div>
             <div class="word2">爷爷我</div>
@@ -328,7 +344,7 @@ body {
         <div>牛逼不？</div>
     </div>
 
-    <!-- 第七页 翻译页面 trans.txt（完全复刻第五页样式） -->
+    <!-- 第七页 翻译页面 trans.txt -->
     <div class="pdf-page text-page" id="page7">
         <div class="lotusBgMask"></div>
         <div class="text-container">
@@ -336,12 +352,19 @@ body {
         </div>
     </div>
 
-<script>
+<script type="text/javascript">
+// 兼容老Edge图片预加载
+function preloadImg(src, callback) {
+    var img = new Image();
+    img.onload = function(){ callback(); };
+    img.onerror = function(){ console.log("图片加载失败："+src); };
+    img.src = src;
+}
 // 通用自适应文字大小
 function autoFit(el, wrap) {
-    const wrapH = wrap.clientHeight;
-    const wrapW = wrap.clientWidth;
-    let fs = 16;
+    var wrapH = wrap.clientHeight;
+    var wrapW = wrap.clientWidth;
+    var fs = 16;
     el.style.fontSize = fs + "px";
     while (el.scrollHeight <= wrapH && el.scrollWidth <= wrapW && fs < 60) {
         fs++;
@@ -350,17 +373,16 @@ function autoFit(el, wrap) {
 }
 // 通用加载背景荷花图
 function loadBg(maskDom) {
-    const img = new Image();
-    img.src = "https://djm.pages.dev/b/lotus.png";
-    img.onload = () => maskDom.style.display = "block";
-    img.onerror = () => console.log("荷花背景加载失败");
+    preloadImg("https://djm.pages.dev/b/lotus.png", function(){
+        maskDom.style.display = "block";
+    });
 }
 // 加载文本通用函数
 async function loadText(url, textEl, maskEl) {
     try {
-        const res = await fetch(url);
+        var res = await fetch(url);
         if (!res.ok) throw new Error("文件读取失败");
-        const text = await res.text();
+        var text = await res.text();
         textEl.className = "text-content";
         textEl.textContent = text;
         autoFit(textEl, textEl.closest(".text-container"));
@@ -372,14 +394,12 @@ async function loadText(url, textEl, maskEl) {
     }
 }
 // 页面初始化
-window.onload = () => {
-    // 第五页加载诗词
+window.onload = function() {
     loadText(
         "https://djm.pages.dev/b/poem.txt",
         document.getElementById("txt-poem"),
         document.querySelector("#page5 .lotusBgMask")
     );
-    // 第七页加载翻译文本
     loadText(
         "https://djm.pages.dev/b/trans.txt",
         document.getElementById("txt-trans"),

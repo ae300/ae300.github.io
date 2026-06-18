@@ -2,17 +2,20 @@
 <html lang="zh-CN">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>生日贺卡 完整版七页 兼容2018Edge</title>
+<title>生日贺卡</title>
 <style type="text/css">
+/* 全局通用重置样式 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: content-box;
 }
+/* 页面外层背景容器 */
 body {
     background: #cccccc;
     padding: 40px;
 }
+/* 所有分页统一基础容器样式，尺寸、阴影、定位统一 */
 .pdf-page {
     width: 595px;
     height: 842px;
@@ -22,7 +25,8 @@ body {
     position: relative;
     overflow: hidden;
 }
-/* ==========第一页 修复inset兼容 ========== */
+
+/* ==========第一页 标题旋转页面 修复旧Edge不兼容inset问题 ========== */
 .page1 .bg-layer {
     position: absolute;
     top: 0;
@@ -75,12 +79,13 @@ body {
 .word4 {
     font-size: 70px;
     font-weight: bold;
-    font-style: oblique;
+    font-style: italic;
     color: #7209b7;
     text-shadow: 2px 2px 0 #f72585;
     text-align: center;
     line-height: 90px;
 }
+/* 逆时针旋转动画 兼容webkit内核 */
 @keyframes antiRotate {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(-360deg); }
@@ -89,19 +94,19 @@ body {
     0% { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
     100% { -webkit-transform: rotate(-360deg); transform: rotate(-360deg); }
 }
-/* ==========第二页蛋糕页========== */
-.cake-img {
+
+/* ==========第二、第九页 图片展示页面共用样式 ========== */
+.img-page-img {
     width: 90%;
     height: 90%;
     display: block;
-    object-fit: cover;
     position: absolute;
     top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
-.cake-text {
+.img-page-text {
     position: absolute;
     bottom: 8px;
     left: 0;
@@ -110,16 +115,16 @@ body {
     font-family: "仿宋", "FangSong", serif;
     font-size: 24px;
     font-weight: bold;
-    color: #BC1A45;
 }
-/* ==========第三页人像全屏图========== */
+
+/* ==========第三页 全屏人像图片页面 ========== */
 .page3-img {
     width: 100%;
     height: 100%;
     display: block;
-    object-fit: cover;
 }
-/* ==========第四页：5秒渐变彩虹背景========== */
+
+/* ==========第四页 缓慢循环彩虹纯色动画页面 ========== */
 @keyframes bgRainbow {
     0%   { background-color: rgb(255, 0, 0); }
     10%  { background-color: rgb(255, 140, 0); }
@@ -162,7 +167,7 @@ body {
 .text-line1 {
     font-size: 92px;
     font-weight: 900;
-    font-style: oblique;
+    font-style: italic;
     font-family: "黑体", sans-serif;
     background: linear-gradient(45deg, #fff, #ffff88, #ffffff);
     -webkit-background-clip: text;
@@ -186,7 +191,8 @@ body {
         9px 9px 12px rgba(0,0,0,0.35);
     letter-spacing: 8px;
 }
-/* ==========第五、第七页共用文本页面样式 修复inset ========== */
+
+/* ==========第五、第七页 文本加载共用页面（诗词+翻译） ========== */
 .text-page {
     position: relative;
 }
@@ -233,7 +239,8 @@ body {
 .error-tip {
     color: #e63946;
 }
-/* ==========第六页：对比色跳跃切换========== */
+
+/* ==========第六页 高对比色块跳跃闪烁页面 ========== */
 @keyframes randomJump {
     0% {
         background-color: #ff0000;
@@ -294,7 +301,87 @@ body {
     font-weight: 900;
     font-family: "黑体", sans-serif;
 }
-/* 打印样式 */
+
+/* ==========第八页 静态垂直彩虹渐变页面 歌曲跳转按钮 ========== */
+.page8 {
+    background: linear-gradient(to bottom,
+        rgb(255, 0, 0),
+        rgb(255, 127, 0),
+        rgb(255, 255, 0),
+        rgb(127, 255, 0),
+        rgb(0, 255, 255),
+        rgb(0, 127, 255),
+        rgb(127, 0, 255),
+        rgb(255, 0, 255)
+    );
+    background: -webkit-linear-gradient(to bottom,
+        rgb(255, 0, 0),
+        rgb(255, 127, 0),
+        rgb(255, 255, 0),
+        rgb(127, 255, 0),
+        rgb(0, 255, 255),
+        rgb(0, 127, 255),
+        rgb(127, 0, 255),
+        rgb(255, 0, 255)
+    );
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    gap: 60px;
+}
+.page8 .title-text {
+    font-size: 72px;
+    font-weight: 900;
+    font-family: "黑体",sans-serif;
+    color: #fff;
+    text-shadow: 2px 2px 6px #000;
+    letter-spacing: 4px;
+}
+.page8 .jump-btn {
+    font-size: 32px;
+    padding: 16px 48px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.65);
+    color: #fff;
+    cursor: pointer;
+}
+.page8 .jump-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* ==========第十页 结尾源代码跳转页面 极简左上角排版 ========== */
+.page10-inner {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+}
+.page10-inner p {
+    font-size: 26px;
+    margin-bottom: 12px;
+}
+.page10-inner .link-text {
+    font-size: 26px;
+    color: #0066cc;
+    text-decoration: underline;
+    cursor: pointer;
+}
+/* 页面底部居中结束语 */
+.page-end-tip {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 28px;
+}
+
+/* ==========打印适配样式 ========== */
 @media print {
     body { background: #fff; padding: 0; }
     .pdf-page { box-shadow: none; margin: 0 0 20px 0; }
@@ -302,65 +389,87 @@ body {
 </style>
 </head>
 <body>
-    <!-- 第一页 替换伪元素为独立div，修复老Edge背景失效 -->
-    <div class="pdf-page page1">
-        <div class="bg-layer"></div>
-        <div class="rotate-wrap">
-            <div class="word1">谭静怡，</div>
-            <div class="word2">爷爷我</div>
-            <div class="word3">祝你</div>
-            <div class="word4">生日快乐！</div>
-        </div>
+<!-- 第1页：旋转文字生日标题 + 背景图 -->
+<div class="pdf-page page1">
+    <div class="bg-layer"></div>
+    <div class="rotate-wrap">
+        <div class="word1">谭静怡，</div>
+        <div class="word2">爷爷我</div>
+        <div class="word3">祝你</div>
+        <div class="word4">生日快乐！</div>
     </div>
+</div>
 
-    <!-- 第二页 -->
-    <div class="pdf-page">
-        <img class="cake-img" src="https://djm.pages.dev/b/cake.png" alt="生日蛋糕">
-        <div class="cake-text">送给你一个大大滴蛋糕（AI生成，好像有点毛病）</div>
-    </div>
+<!-- 第2页：蛋糕图片页面 -->
+<div class="pdf-page">
+    <img class="img-page-img" src="https://djm.pages.dev/b/cake.png" alt="生日蛋糕">
+    <div class="img-page-text" style="color:#BC1A45;">送给你一个大大滴蛋糕（AI生成，好像有点毛病）</div>
+</div>
 
-    <!-- 第三页 -->
-    <div class="pdf-page">
-        <img class="page3-img" src="https://djm.pages.dev/b/me.png" alt="人像">
-    </div>
+<!-- 第3页：全屏人像图片 -->
+<div class="pdf-page">
+    <img class="page3-img" src="https://djm.pages.dev/b/me.png" alt="人像">
+</div>
 
-    <!-- 第四页 -->
-    <div class="pdf-page page4">
-        <div class="text-line1">别急啊，</div>
-        <div class="text-line2">还有呢！</div>
-    </div>
+<!-- 第4页：缓慢彩虹渐变文字页面 -->
+<div class="pdf-page page4">
+    <div class="text-line1">别急啊，</div>
+    <div class="text-line2">还有呢！</div>
+</div>
 
-    <!-- 第五页 诗词页面 poem.txt -->
-    <div class="pdf-page text-page" id="page5">
-        <div class="lotusBgMask"></div>
-        <div class="text-container">
-            <div class="text-content tip-text" id="txt-poem">正在加载诗词内容...</div>
-        </div>
+<!-- 第5页：加载诗词文本poem.txt，荷花半透背景 -->
+<div class="pdf-page text-page" id="page5">
+    <div class="lotusBgMask"></div>
+    <div class="text-container">
+        <div class="text-content tip-text" id="txt-poem">正在加载诗词内容...</div>
     </div>
+</div>
 
-    <!-- 第六页 -->
-    <div class="pdf-page page6">
-        <div>怎么样，</div>
-        <div>牛逼不？</div>
-    </div>
+<!-- 第6页：高对比闪烁文字页面 -->
+<div class="pdf-page page6">
+    <div>怎么样，</div>
+    <div>牛逼不？</div>
+</div>
 
-    <!-- 第七页 翻译页面 trans.txt -->
-    <div class="pdf-page text-page" id="page7">
-        <div class="lotusBgMask"></div>
-        <div class="text-container">
-            <div class="text-content tip-text" id="txt-trans">正在加载白话翻译内容...</div>
-        </div>
+<!-- 第7页：加载白话翻译trans.txt，荷花半透背景 -->
+<div class="pdf-page text-page" id="page7">
+    <div class="lotusBgMask"></div>
+    <div class="text-container">
+        <div class="text-content tip-text" id="txt-trans">正在加载白话翻译内容...</div>
     </div>
+</div>
+
+<!-- 第8页：静态彩虹渐变，歌曲跳转（新标签打开B站） -->
+<div class="pdf-page page8">
+    <div class="title-text">送你一首TOMBOY</div>
+    <button class="jump-btn" onclick="window.open('https://www.bilibili.com/video/BV1Mq4y1v7bk/','_blank')">↗点击跳转</button>
+</div>
+
+<!-- 第9页：女孩图片页面，底部黑色文字 -->
+<div class="pdf-page">
+    <img class="img-page-img" src="https://djm.pages.dev/b/girl.png" alt="女孩">
+    <div class="img-page-text" style="color:#000000;">希望你长这样</div>
+</div>
+
+<!-- 第10页：结尾源代码跳转页面，底部居中“到此结束” -->
+<div class="pdf-page">
+    <div class="page10-inner">
+        <p>好了，编了这么多了，给你看看源代码：</p>
+        <span class="link-text" onclick="window.open('https://djm.pages.dev/b/code.txt','_blank')">↗点击跳转</span>
+    </div>
+    <div class="page-end-tip">到此结束</div>
+</div>
 
 <script type="text/javascript">
-// 兼容老Edge图片预加载
+/* 图片预加载兼容函数，适配2018旧版Edge */
 function preloadImg(src, callback) {
     var img = new Image();
     img.onload = function(){ callback(); };
     img.onerror = function(){ console.log("图片加载失败："+src); };
     img.src = src;
 }
-// 通用自适应文字大小
+
+/* 文本容器自适应文字大小，自动缩放字体适配页面留白 */
 function autoFit(el, wrap) {
     var wrapH = wrap.clientHeight;
     var wrapW = wrap.clientWidth;
@@ -371,13 +480,15 @@ function autoFit(el, wrap) {
         el.style.fontSize = fs + "px";
     }
 }
-// 通用加载背景荷花图
+
+/* 荷花背景遮罩加载逻辑，文字渲染完成后再显示背景 */
 function loadBg(maskDom) {
     preloadImg("https://djm.pages.dev/b/lotus.png", function(){
         maskDom.style.display = "block";
     });
 }
-// 加载文本通用函数
+
+/* 通用远程文本加载函数：加载txt文本、自适应文字、加载背景、异常报错 */
 async function loadText(url, textEl, maskEl) {
     try {
         var res = await fetch(url);
@@ -393,13 +504,16 @@ async function loadText(url, textEl, maskEl) {
         loadBg(maskEl);
     }
 }
-// 页面初始化
+
+/* 页面加载完成后，同时加载诗词与翻译文本 */
 window.onload = function() {
+    // 加载第五页诗词
     loadText(
         "https://djm.pages.dev/b/poem.txt",
         document.getElementById("txt-poem"),
         document.querySelector("#page5 .lotusBgMask")
     );
+    // 加载第七页白话翻译
     loadText(
         "https://djm.pages.dev/b/trans.txt",
         document.getElementById("txt-trans"),

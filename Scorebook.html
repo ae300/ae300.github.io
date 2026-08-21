@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>比赛计分簿</title>
+<style type="text/css">
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    background:#0b0e18;
+    color:#ffffff;
+    font-family:Arial, Helvetica, sans-serif;
+    min-height:100vh;
+    background-image:radial-gradient(circle at 50% 0%,#1a2442 0%,#0b0e18 70%);
+}
+.container{
+    max-width:900px;
+    margin:0 auto;
+    padding:20px 15px;
+}
+h1{
+    text-align:center;
+    font-size:32px;
+    color:#42a5ff;
+    text-shadow:0 0 12px #2978d8;
+    margin-bottom:30px;
+}
+.score-wrap{
+    display:table;
+    width:100%;
+}
+.score-row{
+    display:table-row;
+}
+.team-block{
+    display:table-cell;
+    width:50%;
+    padding:12px;
+    vertical-align:top;
+}
+.card{
+    border:2px solid #254b87;
+    border-radius:14px;
+    background:#12192c;
+    box-shadow: 0 0 20px #1c3b7077;
+    padding:24px 16px;
+    text-align:center;
+}
+.team-name{
+    background:transparent;
+    border:none;
+    border-bottom:1px solid #4472b8;
+    color:#fff;
+    font-size:22px;
+    text-align:center;
+    width:90%;
+    padding:6px;
+    margin-bottom:16px;
+    outline:none;
+}
+.score-num{
+    font-size:80px;
+    font-weight:bold;
+    color:#54c0ff;
+    text-shadow:0 0 18px #2394dd;
+    margin:10px 0 22px;
+}
+.btn-group{
+}
+.btn{
+    padding:10px 18px;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    margin:4px;
+    cursor:pointer;
+}
+.btn-add{
+    background:#168039;
+    color:#fff;
+}
+.btn-sub{
+    background:#992222;
+    color:#fff;
+}
+.btn-reset-all{
+    display:block;
+    margin:30px auto 10px;
+    background:#d47800;
+    color:#fff;
+    padding:12px 32px;
+    font-size:18px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+}
+
+/* 手机适配 HTML4兼容媒体查询 */
+@media screen and (max-width:600px){
+    .score-wrap{display:block;}
+    .score-row{display:block;}
+    .team-block{
+        display:block;
+        width:100%;
+    }
+    .score-num{font-size:62px;}
+    h1{font-size:24px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>🏆 比赛计分簿</h1>
+    <div class="score-wrap">
+        <div class="score-row">
+            <div class="team-block">
+                <div class="card">
+                    <input type="text" class="team-name" id="nameA" value="队伍A">
+                    <div class="score-num" id="scoreA">0</div>
+                    <div class="btn-group">
+                        <button class="btn btn-add" onclick="add('A',1)">+1</button>
+                        <button class="btn btn-sub" onclick="sub('A',1)">-1</button>
+                        <button class="btn btn-add" onclick="add('A',5)">+5</button>
+                        <button class="btn btn-sub" onclick="sub('A',5)">-5</button>
+                    </div>
+                </div>
+            </div>
+            <div class="team-block">
+                <div class="card">
+                    <input type="text" class="team-name" id="nameB" value="队伍B">
+                    <div class="score-num" id="scoreB">0</div>
+                    <div class="btn-group">
+                        <button class="btn btn-add" onclick="add('B',1)">+1</button>
+                        <button class="btn btn-sub" onclick="sub('B',1)">-1</button>
+                        <button class="btn btn-add" onclick="add('B',5)">+5</button>
+                        <button class="btn btn-sub" onclick="sub('B',5)">-5</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn-reset-all" onclick="resetAll()">全部重置</button>
+</div>
+
+<script type="text/javascript">
+var scoreA = 0;
+var scoreB = 0;
+
+function add(team,val){
+    if(team==='A'){
+        scoreA += val;
+        document.getElementById("scoreA").innerText = scoreA;
+    }else{
+        scoreB += val;
+        document.getElementById("scoreB").innerText = scoreB;
+    }
+}
+function sub(team,val){
+    if(team==='A'){
+        scoreA = Math.max(0, scoreA-val);
+        document.getElementById("scoreA").innerText = scoreA;
+    }else{
+        scoreB = Math.max(0, scoreB-val);
+        document.getElementById("scoreB").innerText = scoreB;
+    }
+}
+function resetAll(){
+    scoreA=0;
+    scoreB=0;
+    document.getElementById("scoreA").innerText = "0";
+    document.getElementById("scoreB").innerText = "0";
+    document.getElementById("nameA").value="队伍A";
+    document.getElementById("nameB").value="队伍B";
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FC俱乐部展览板</title>
+<style type="text/css">
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+    background:#EEEEEE;
+    font-family:Arial, Helvetica, sans-serif;
+    padding:16px;
+}
+.item-card{
+    background:#ffffff;
+    border-radius:8px;
+    margin-bottom:16px;
+    overflow:hidden;
+}
+.media-wrap{
+    width:100%;
+}
+.media-wrap img{
+    width:100%;
+    display:block;
+}
+.info-wrap{
+    padding:14px 16px 18px;
+}
+.title-text{
+    font-size:18px;
+    margin-bottom:12px;
+    word-break:break-all;
+}
+.download-btn{
+    width:100%;
+    padding:10px 0;
+    font-size:16px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="container"></div>
+
+<script type="text/javascript">
+//数据格式：[图片链接, 标题]
+var dataList = [
+    ["/fcclub/DSC_0915.JPG", "2026-09-13 滕少达的精彩表现"],
+    ["/fcclub/DSC_0914.JPG", "2026-09-13 滕少达的精彩表现"],
+    ["/fcclub/DSC_0913.JPG", "2026-09-13 滕少达的精彩表现"],
+    ["/fcclub/DSC_0912.JPG", "2026-09-13 滕少达的精彩表现"],
+    ["/fcclub/DSC_0911.JPG", "2026-09-13 滕少达的精彩表现"],
+    ["/fcclub/DSC_0907.JPG", "2026-09-13 滕少达的精彩表现"],
+];
+
+function renderList(){
+    var container = document.getElementById("container");
+    for(var i=0;i<dataList.length;i++){
+        var item = dataList[i];
+        var imgUrl = item[0];
+        var title = item[1];
+
+        var card = document.createElement("div");
+        card.className = "item-card";
+
+        var mediaWrap = document.createElement("div");
+        mediaWrap.className = "media-wrap";
+
+        var img = document.createElement("img");
+        img.src = imgUrl;
+        mediaWrap.appendChild(img);
+
+        var infoWrap = document.createElement("div");
+        infoWrap.className = "info-wrap";
+
+        var titleDom = document.createElement("div");
+        titleDom.className = "title-text";
+        titleDom.innerText = title;
+
+        var btnDownload = document.createElement("button");
+        btnDownload.className = "download-btn";
+        btnDownload.innerText = "下载";
+        btnDownload.onclick = (function(u){
+            return function(){
+                var a = document.createElement("a");
+                a.href = u;
+                a.download = "";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        })(imgUrl);
+
+        infoWrap.appendChild(titleDom);
+        infoWrap.appendChild(btnDownload);
+
+        card.appendChild(mediaWrap);
+        card.appendChild(infoWrap);
+        container.appendChild(card);
+    }
+}
+
+window.onload = function(){
+    renderList();
+};
+</script>
+</body>
+</html>

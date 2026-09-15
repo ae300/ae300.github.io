@@ -1,111 +1,123 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang="zh-CN">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FC俱乐部展览板</title>
 <style type="text/css">
 *{margin:0;padding:0;box-sizing:border-box;}
-body {
-    background:#EEEEEE;
-    font-family:Arial, Helvetica, sans-serif;
-    padding:16px;
-}
-.item-card{
-    background:#ffffff;
-    border-radius:8px;
-    margin-bottom:16px;
-    overflow:hidden;
-}
-.media-wrap{
-    width:100%;
-}
-.media-wrap img{
-    width:100%;
-    display:block;
-}
-.info-wrap{
-    padding:14px 16px 18px;
-}
-.title-text{
-    font-size:18px;
-    margin-bottom:12px;
-    word-break:break-all;
-}
-.download-btn{
-    width:100%;
-    padding:10px 0;
-    font-size:16px;
-    cursor:pointer;
-}
+body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:12px;}
+.header-img{width:100%;display:block;margin-bottom:16px;}
+.item-card{background:#ffffff;padding:12px;margin-bottom:14px;border-radius:6px;}
+.item-img{width:100%;display:block;margin-bottom:10px;}
+.item-title{font-size:17px;margin-bottom:12px;}
+.download-btn{width:100%;padding:10px;font-size:16px;cursor:pointer;}
+.pagination-wrap{margin-top:30px;text-align:center;}
+.page-info{font-size:20px;margin-bottom:12px;}
+.pagination-controls{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+.copyright-bar{background:#000000;color:#ffffff;font-size:16px;text-align:center;padding:14px 8px;}
 </style>
 </head>
 <body>
+<img class="header-img" src="/fcclub/info.png">
 
-<div id="container"></div>
+<div id="list-container"></div>
+
+<div class="pagination-wrap">
+    <div class="page-info" id="pageText">第1页 | 共1页</div>
+    <div class="pagination-controls">
+        <input type="text" id="pageInput">
+        <button id="btnPrev">上一页</button>
+        <button id="btnNext">下一页</button>
+        <button id="btnFirst">第1页</button>
+        <button id="btnLast">第N页</button>
+    </div>
+</div>
+
+<div class="copyright-bar">莲城联合FC俱乐部展览板 © 2026 丁先生, 保留所有权利.</div>
 
 <script type="text/javascript">
-//数据格式：[图片链接, 标题]
+//数据 [图片链接,标题]
 var dataList = [
     ["/fcclub/DSC_0915.JPG", "2026-09-13 滕少达的精彩表现"],
     ["/fcclub/DSC_0914.JPG", "2026-09-13 滕少达的精彩表现"],
     ["/fcclub/DSC_0913.JPG", "2026-09-13 滕少达的精彩表现"],
     ["/fcclub/DSC_0912.JPG", "2026-09-13 滕少达的精彩表现"],
     ["/fcclub/DSC_0911.JPG", "2026-09-13 滕少达的精彩表现"],
-    ["/fcclub/DSC_0907.JPG", "2026-09-13 滕少达的精彩表现"],
+    ["/fcclub/DSC_0907.JPG", "2026-09-13 滕少达的精彩表现"]
 ];
+var pageSize = 20;
+var currentPage = 1;
+var totalPage = Math.ceil(dataList.length / pageSize);
 
-function renderList(){
-    var container = document.getElementById("container");
-    for(var i=0;i<dataList.length;i++){
-        var item = dataList[i];
-        var imgUrl = item[0];
-        var title = item[1];
+var listContainer = document.getElementById("list-container");
+var pageText = document.getElementById("pageText");
+var pageInput = document.getElementById("pageInput");
+var btnPrev = document.getElementById("btnPrev");
+var btnNext = document.getElementById("btnNext");
+var btnFirst = document.getElementById("btnFirst");
+var btnLast = document.getElementById("btnLast");
 
-        var card = document.createElement("div");
-        card.className = "item-card";
+function render(){
+    totalPage = Math.ceil(dataList.length / pageSize);
+    listContainer.innerHTML = "";
+    var start = (currentPage - 1) * pageSize;
+    var end = start + pageSize;
+    var slice = dataList.slice(start, end);
 
-        var mediaWrap = document.createElement("div");
-        mediaWrap.className = "media-wrap";
+    for(var i = 0; i < slice.length; i++){
+        var item = slice[i];
+        var div = document.createElement("div");
+        div.className = "item-card";
+        div.innerHTML = '<img class="item-img" src="'+item[0]+'" alt="">'
+            +'<div class="item-title">'+item[1]+'</div>'
+            +'<button class="download-btn" data-link="'+item[0]+'">下载</button>';
+        listContainer.appendChild(div);
+    }
 
-        var img = document.createElement("img");
-        img.src = imgUrl;
-        mediaWrap.appendChild(img);
+    pageText.innerText = "第"+currentPage+"页 | 共"+totalPage+"页";
+    btnLast.innerText = "第"+totalPage+"页";
+    pageInput.value = currentPage;
 
-        var infoWrap = document.createElement("div");
-        infoWrap.className = "info-wrap";
+    //按钮禁用逻辑
+    btnPrev.disabled = (currentPage === 1);
+    btnFirst.disabled = (currentPage === 1);
+    btnNext.disabled = (currentPage === totalPage);
+    btnLast.disabled = (currentPage === totalPage);
 
-        var titleDom = document.createElement("div");
-        titleDom.className = "title-text";
-        titleDom.innerText = title;
-
-        var btnDownload = document.createElement("button");
-        btnDownload.className = "download-btn";
-        btnDownload.innerText = "下载";
-        btnDownload.onclick = (function(u){
-            return function(){
-                var a = document.createElement("a");
-                a.href = u;
-                a.download = "";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
-        })(imgUrl);
-
-        infoWrap.appendChild(titleDom);
-        infoWrap.appendChild(btnDownload);
-
-        card.appendChild(mediaWrap);
-        card.appendChild(infoWrap);
-        container.appendChild(card);
+    //下载事件绑定
+    var btns = document.querySelectorAll(".download-btn");
+    for(var j=0;j<btns.length;j++){
+        btns[j].onclick = function(){
+            var link = this.getAttribute("data-link");
+            var a = document.createElement("a");
+            a.href = link;
+            a.setAttribute("download","");
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
     }
 }
 
-window.onload = function(){
-    renderList();
-};
+function goPage(p){
+    var target = parseInt(p,10);
+    if(isNaN(target) || target <1 || target > totalPage){
+        pageInput.value = currentPage;
+        return;
+    }
+    currentPage = target;
+    render();
+}
+
+btnPrev.onclick = function(){goPage(currentPage-1);};
+btnNext.onclick = function(){goPage(currentPage+1);};
+btnFirst.onclick = function(){goPage(1);};
+btnLast.onclick = function(){goPage(totalPage);};
+pageInput.onchange = function(){goPage(this.value);};
+
+render();
 </script>
 </body>
 </html>

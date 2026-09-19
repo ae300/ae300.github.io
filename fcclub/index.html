@@ -15,12 +15,12 @@ body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:1
 .download-btn{width:100%;padding:10px;font-size:16px;cursor:pointer;}
 .pagination-wrap{margin-top:30px;text-align:center;}
 .page-info{font-size:20px;margin-bottom:12px;}
-.pagination-controls{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
-/* 分页输入框、按钮字号改为24px */
+.pagination-controls{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+/* 分页输入框、按钮字号20px，缩小内边距，和page-info字号保持一致 */
 .pagination-controls input,
 .pagination-controls button {
-    font-size: 24px;
-    padding: 6px 12px;
+    font-size: 20px;
+    padding: 3px 8px;
 }
 .copyright-bar{background:#000000;color:#ffffff;font-size:16px;text-align:center;padding:14px 8px;}
 </style>
@@ -86,6 +86,10 @@ var btnPrev = document.getElementById("btnPrev");
 var btnNext = document.getElementById("btnNext");
 var btnFirst = document.getElementById("btnFirst");
 var btnLast = document.getElementById("btnLast");
+
+//标记是否是首次页面加载
+var isFirstLoad = true;
+
 function render(){
     totalPage = Math.ceil(dataList.length / pageSize);
     listContainer.innerHTML = "";
@@ -122,8 +126,12 @@ function render(){
             document.body.removeChild(a);
         }
     }
-    //切换页面自动滚动到页面最上方
-    window.scrollTo({top:0,behavior:"smooth"});
+    // 修复：只在非首次加载（翻页的时候）才滚动到顶部，刚打开页面不触发滚动
+    if(!isFirstLoad){
+        window.scrollTo({top:0,behavior:"smooth"});
+    }else{
+        isFirstLoad = false;
+    }
 }
 function goPage(p){
     var target = parseInt(p,10);

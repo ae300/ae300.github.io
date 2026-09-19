@@ -9,14 +9,18 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:12px;}
 .header-img{width:100%;display:block;margin-bottom:16px;}
+/* PC端：除封面头图外，主体容器占6/8宽度，左右各留1/8空白 */
+.pc-container{
+    max-width: 75%;
+    margin-left: 12.5%;
+    margin-right: 12.5%;
+}
 .item-card{background:#ffffff;padding:12px;margin-bottom:14px;border-radius:6px;}
 .item-img{width:100%;display:block;margin-bottom:10px;}
 .item-title{font-size:17px;margin-bottom:12px;}
 .download-btn{width:100%;padding:10px;font-size:16px;cursor:pointer;}
 .pagination-wrap{margin-top:30px;text-align:center;}
-/* 页码信息文字改为32px，更加显眼 */
 .page-info{font-size:32px;margin-bottom:12px;}
-/* 恢复上次：gap:8px，按钮输入框24px字号，padding:6px 12px */
 .pagination-controls{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
 .pagination-controls input,
 .pagination-controls button {
@@ -28,15 +32,17 @@ body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:1
 </head>
 <body>
 <img class="header-img" src="/fcclub/info.png">
-<div id="list-container"></div>
-<div class="pagination-wrap">
-    <div class="page-info" id="pageText">第1页 | 共1页</div>
-    <div class="pagination-controls">
-        <input type="text" id="pageInput">
-        <button id="btnPrev">上一页</button>
-        <button id="btnNext">下一页</button>
-        <button id="btnFirst">第1页</button>
-        <button id="btnLast">第N页</button>
+<div class="pc-container">
+    <div id="list-container"></div>
+    <div class="pagination-wrap">
+        <div class="page-info" id="pageText">第1页 | 共1页</div>
+        <div class="pagination-controls">
+            <input type="text" id="pageInput">
+            <button id="btnPrev">上一页</button>
+            <button id="btnNext">下一页</button>
+            <button id="btnFirst">第1页</button>
+            <button id="btnLast">第N页</button>
+        </div>
     </div>
 </div>
 <div class="copyright-bar">莲城联合FC俱乐部展览板 © 2026 丁先生, 保留所有权利.</div>
@@ -90,6 +96,23 @@ var btnLast = document.getElementById("btnLast");
 
 var isFirstLoad = true;
 
+// 判断是否微信内置浏览器
+function isWeChat(){
+    return /MicroMessenger/i.test(navigator.userAgent);
+}
+// 判断是否PC环境
+function isPC(){
+    var ua = navigator.userAgent;
+    return !/(Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini)/i.test(ua);
+}
+
+// 如果不是PC，移除pc-container样式，移动端铺满
+if(!isPC()){
+    document.querySelector(".pc-container").style.maxWidth = "100%";
+    document.querySelector(".pc-container").style.marginLeft = "0";
+    document.querySelector(".pc-container").style.marginRight = "0";
+}
+
 function render(){
     totalPage = Math.ceil(dataList.length / pageSize);
     listContainer.innerHTML = "";
@@ -108,16 +131,21 @@ function render(){
     pageText.innerText = "第"+currentPage+"页 | 共"+totalPage+"页";
     btnLast.innerText = "第"+totalPage+"页";
     pageInput.value = currentPage;
-    //按钮禁用逻辑
     btnPrev.disabled = (currentPage === 1);
     btnFirst.disabled = (currentPage === 1);
     btnNext.disabled = (currentPage === totalPage);
     btnLast.disabled = (currentPage === totalPage);
-    //下载事件绑定
+
     var btns = document.querySelectorAll(".download-btn");
     for(var j=0;j<btns.length;j++){
         btns[j].onclick = function(){
             var link = this.getAttribute("data-link");
+            //微信环境拦截下载，弹出提示
+            if(isWeChat()){
+                alert("您正在使用微信浏览本页面，如需下载图片，请长按图片并点击“保存”按钮。");
+                return;
+            }
+            //非微信执行下载
             var a = document.createElement("a");
             a.href = link;
             a.setAttribute("download","");
@@ -126,7 +154,7 @@ function render(){
             document.body.removeChild(a);
         }
     }
-    //仅翻页才滚动，首次打开页面不滚动
+
     if(!isFirstLoad){
         window.scrollTo({top:0,behavior:"smooth"});
     }else{

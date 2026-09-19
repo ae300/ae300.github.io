@@ -28,6 +28,22 @@ body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:1
     padding: 6px 12px;
 }
 .copyright-bar{background:#000000;color:#ffffff;font-size:16px;text-align:center;padding:14px 8px;}
+/* 自定义toast提示，字号20px */
+#tipToast{
+    display:none;
+    position:fixed;
+    top:40%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:rgba(0,0,0,0.75);
+    color:#fff;
+    font-size:20px;
+    padding:14px 20px;
+    border-radius:8px;
+    z-index:9999;
+    max-width:85%;
+    text-align:center;
+}
 </style>
 </head>
 <body>
@@ -45,6 +61,8 @@ body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:1
         </div>
     </div>
 </div>
+<!-- 弹窗提示层 -->
+<div id="tipToast"></div>
 <div class="copyright-bar">莲城联合FC俱乐部展览板 © 2026 丁先生, 保留所有权利.</div>
 <script type="text/javascript">
 //数据 [图片链接,标题]
@@ -106,6 +124,16 @@ function isPC(){
     return !/(Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini)/i.test(ua);
 }
 
+// 自定义提示toast
+function showTip(text){
+    var toast = document.getElementById("tipToast");
+    toast.innerText = text;
+    toast.style.display="block";
+    setTimeout(function(){
+        toast.style.display="none";
+    },2200);
+}
+
 // 移动端重置外层容器，铺满屏幕
 if(!isPC()){
     document.querySelector(".wrap-all").style.maxWidth = "100%";
@@ -140,9 +168,9 @@ function render(){
     for(var j=0;j<btns.length;j++){
         btns[j].onclick = function(){
             var link = this.getAttribute("data-link");
-            //微信环境拦截下载，弹出提示
+            //微信环境使用自定义toast提示，不再用alert
             if(isWeChat()){
-                alert("您正在使用微信浏览本页面，如需下载图片，请长按图片并点击“保存”按钮。");
+                showTip("您正在使用微信浏览本页面，如需下载图片，请长按图片并点击“保存到手机”。");
                 return;
             }
             //非微信执行下载

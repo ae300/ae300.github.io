@@ -8,13 +8,13 @@
 <style type="text/css">
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:12px;}
-.header-img{width:100%;display:block;margin-bottom:16px;}
-/* PC端：除封面头图外，主体容器占8/10宽度，左右各留1/10空白 */
-.pc-container{
-    max-width: 80%;
-    margin-left: 10%;
-    margin-right: 10%;
+/* PC：封面+全部主体整体占90%，左右各5%留白 */
+.wrap-all{
+    max-width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
 }
+.header-img{width:100%;display:block;margin-bottom:16px;}
 .item-card{background:#ffffff;padding:12px;margin-bottom:14px;border-radius:6px;}
 .item-img{width:100%;display:block;margin-bottom:10px;}
 .item-title{font-size:17px;margin-bottom:12px;}
@@ -31,8 +31,8 @@ body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:1
 </style>
 </head>
 <body>
-<img class="header-img" src="/fcclub/info.png">
-<div class="pc-container">
+<div class="wrap-all">
+    <img class="header-img" src="/fcclub/info.png">
     <div id="list-container"></div>
     <div class="pagination-wrap">
         <div class="page-info" id="pageText">第1页 | 共1页</div>
@@ -106,11 +106,11 @@ function isPC(){
     return !/(Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini)/i.test(ua);
 }
 
-// 如果不是PC，移除pc-container样式，移动端铺满
+// 移动端重置外层容器，铺满屏幕
 if(!isPC()){
-    document.querySelector(".pc-container").style.maxWidth = "100%";
-    document.querySelector(".pc-container").style.marginLeft = "0";
-    document.querySelector(".pc-container").style.marginRight = "0";
+    document.querySelector(".wrap-all").style.maxWidth = "100%";
+    document.querySelector(".wrap-all").style.marginLeft = "0";
+    document.querySelector(".wrap-all").style.marginRight = "0";
 }
 
 function render(){

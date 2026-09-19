@@ -14,13 +14,14 @@ body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:1
 .item-title{font-size:17px;margin-bottom:12px;}
 .download-btn{width:100%;padding:10px;font-size:16px;cursor:pointer;}
 .pagination-wrap{margin-top:30px;text-align:center;}
-.page-info{font-size:20px;margin-bottom:12px;}
-.pagination-controls{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
-/* 分页输入框、按钮字号20px，缩小内边距，和page-info字号保持一致 */
+/* 页码信息文字改为32px，更加显眼 */
+.page-info{font-size:32px;margin-bottom:12px;}
+/* 恢复上次：gap:8px，按钮输入框24px字号，padding:6px 12px */
+.pagination-controls{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
 .pagination-controls input,
 .pagination-controls button {
-    font-size: 20px;
-    padding: 3px 8px;
+    font-size: 24px;
+    padding: 6px 12px;
 }
 .copyright-bar{background:#000000;color:#ffffff;font-size:16px;text-align:center;padding:14px 8px;}
 </style>
@@ -87,7 +88,6 @@ var btnNext = document.getElementById("btnNext");
 var btnFirst = document.getElementById("btnFirst");
 var btnLast = document.getElementById("btnLast");
 
-//标记是否是首次页面加载
 var isFirstLoad = true;
 
 function render(){
@@ -126,7 +126,7 @@ function render(){
             document.body.removeChild(a);
         }
     }
-    // 修复：只在非首次加载（翻页的时候）才滚动到顶部，刚打开页面不触发滚动
+    //仅翻页才滚动，首次打开页面不滚动
     if(!isFirstLoad){
         window.scrollTo({top:0,behavior:"smooth"});
     }else{

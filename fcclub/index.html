@@ -16,14 +16,18 @@ body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:1
 .pagination-wrap{margin-top:30px;text-align:center;}
 .page-info{font-size:20px;margin-bottom:12px;}
 .pagination-controls{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+/* 分页输入框、按钮字号改为24px */
+.pagination-controls input,
+.pagination-controls button {
+    font-size: 24px;
+    padding: 6px 12px;
+}
 .copyright-bar{background:#000000;color:#ffffff;font-size:16px;text-align:center;padding:14px 8px;}
 </style>
 </head>
 <body>
 <img class="header-img" src="/fcclub/info.png">
-
 <div id="list-container"></div>
-
 <div class="pagination-wrap">
     <div class="page-info" id="pageText">第1页 | 共1页</div>
     <div class="pagination-controls">
@@ -34,9 +38,7 @@ body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:1
         <button id="btnLast">第N页</button>
     </div>
 </div>
-
 <div class="copyright-bar">莲城联合FC俱乐部展览板 © 2026 丁先生, 保留所有权利.</div>
-
 <script type="text/javascript">
 //数据 [图片链接,标题]
 var dataList = [
@@ -46,7 +48,6 @@ var dataList = [
     ['/fcclub/2026091819.JPG', '2026-09-18'],
     ['/fcclub/2026091818.JPG', '2026-09-18'],
     ['/fcclub/2026091817.JPG', '2026-09-18'],
-    ['/fcclub/2026091816.JPG', '2026-09-18'],
     ['/fcclub/2026091815.JPG', '2026-09-18'],
     ['/fcclub/2026091814.JPG', '2026-09-18'],
     ['/fcclub/2026091813.JPG', '2026-09-18'],
@@ -56,7 +57,6 @@ var dataList = [
     ['/fcclub/202609180F.JPG', '2026-09-18'],
     ['/fcclub/202609180E.JPG', '2026-09-18'],
     ['/fcclub/202609180D.JPG', '2026-09-18'],
-    ['/fcclub/202609180C.JPG', '2026-09-18'],
     ['/fcclub/202609180B.JPG', '2026-09-18'],
     ['/fcclub/202609180A.JPG', '2026-09-18'],
     ['/fcclub/2026091809.JPG', '2026-09-18'],
@@ -79,7 +79,6 @@ var dataList = [
 var pageSize = 20;
 var currentPage = 1;
 var totalPage = Math.ceil(dataList.length / pageSize);
-
 var listContainer = document.getElementById("list-container");
 var pageText = document.getElementById("pageText");
 var pageInput = document.getElementById("pageInput");
@@ -87,14 +86,12 @@ var btnPrev = document.getElementById("btnPrev");
 var btnNext = document.getElementById("btnNext");
 var btnFirst = document.getElementById("btnFirst");
 var btnLast = document.getElementById("btnLast");
-
 function render(){
     totalPage = Math.ceil(dataList.length / pageSize);
     listContainer.innerHTML = "";
     var start = (currentPage - 1) * pageSize;
     var end = start + pageSize;
     var slice = dataList.slice(start, end);
-
     for(var i = 0; i < slice.length; i++){
         var item = slice[i];
         var div = document.createElement("div");
@@ -104,17 +101,14 @@ function render(){
             +'<button class="download-btn" data-link="'+item[0]+'">下载</button>';
         listContainer.appendChild(div);
     }
-
     pageText.innerText = "第"+currentPage+"页 | 共"+totalPage+"页";
     btnLast.innerText = "第"+totalPage+"页";
     pageInput.value = currentPage;
-
     //按钮禁用逻辑
     btnPrev.disabled = (currentPage === 1);
     btnFirst.disabled = (currentPage === 1);
     btnNext.disabled = (currentPage === totalPage);
     btnLast.disabled = (currentPage === totalPage);
-
     //下载事件绑定
     var btns = document.querySelectorAll(".download-btn");
     for(var j=0;j<btns.length;j++){
@@ -128,8 +122,9 @@ function render(){
             document.body.removeChild(a);
         }
     }
+    //切换页面自动滚动到页面最上方
+    window.scrollTo({top:0,behavior:"smooth"});
 }
-
 function goPage(p){
     var target = parseInt(p,10);
     if(isNaN(target) || target <1 || target > totalPage){
@@ -139,13 +134,11 @@ function goPage(p){
     currentPage = target;
     render();
 }
-
 btnPrev.onclick = function(){goPage(currentPage-1);};
 btnNext.onclick = function(){goPage(currentPage+1);};
 btnFirst.onclick = function(){goPage(1);};
 btnLast.onclick = function(){goPage(totalPage);};
 pageInput.onchange = function(){goPage(this.value);};
-
 render();
 </script>
 </body>

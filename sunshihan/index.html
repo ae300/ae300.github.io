@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html lang="zh-CN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>孙诗涵和胡婕的帅照</title>
+<style type="text/css">
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background-color:#EEEEEE;font-family:"Microsoft YaHei",sans-serif;padding:12px;}
+/* PC：封面+全部主体整体占90%，左右各5%留白 */
+.wrap-all{
+    max-width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.header-img{width:100%;display:block;margin-bottom:16px;}
+.item-card{background:#ffffff;padding:12px;margin-bottom:14px;border-radius:6px;}
+.item-img{width:100%;display:block;margin-bottom:10px;}
+.item-title{font-size:17px;margin-bottom:12px;}
+.download-btn{width:100%;padding:10px;font-size:16px;cursor:pointer;}
+.pagination-wrap{margin-top:30px;text-align:center;}
+.page-info{font-size:32px;margin-bottom:12px;}
+.pagination-controls{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+.pagination-controls input,
+.pagination-controls button {
+    font-size: 24px;
+    padding: 6px 12px;
+}
+.copyright-bar{background:#000000;color:#ffffff;font-size:16px;text-align:center;padding:14px 8px;}
+/* 自定义toast提示，字号20px */
+#tipToast{
+    display:none;
+    position:fixed;
+    top:40%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:rgba(0,0,0,0.75);
+    color:#fff;
+    font-size:20px;
+    padding:14px 20px;
+    border-radius:8px;
+    z-index:9999;
+    max-width:85%;
+    text-align:center;
+}
+</style>
+</head>
+<body>
+<div class="wrap-all">
+    <img class="header-img" src="/dingyan/info.png">
+    <div id="list-container"></div>
+    <div class="pagination-wrap">
+        <div class="page-info" id="pageText">第1页 | 共1页</div>
+        <div class="pagination-controls">
+            <input type="text" id="pageInput">
+            <button id="btnPrev">上一页</button>
+            <button id="btnNext">下一页</button>
+            <button id="btnFirst">第1页</button>
+            <button id="btnLast">第N页</button>
+        </div>
+    </div>
+</div>
+<!-- 弹窗提示层 -->
+<div id="tipToast"></div>
+<div class="copyright-bar">孙诗涵和胡婕的帅照 © 2026 丁先生, 保留所有权利.</div>
+<script type="text/javascript">
+//数据 [图片链接,标题]
+var dataList = [
+    ["/sunshihan/Sh5N00.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N01.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N02.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N03.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N04.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N05.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N06.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N07.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N08.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N09.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N0A.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N0B.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N0C.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N0D.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N0E.JPG", "202?-??-??"],
+    ["/sunshihan/Sh5N0F.JPG", "202?-??-??"]
+];
+var pageSize = 20;
+var currentPage = 1;
+var totalPage = Math.ceil(dataList.length / pageSize);
+var listContainer = document.getElementById("list-container");
+var pageText = document.getElementById("pageText");
+var pageInput = document.getElementById("pageInput");
+var btnPrev = document.getElementById("btnPrev");
+var btnNext = document.getElementById("btnNext");
+var btnFirst = document.getElementById("btnFirst");
+var btnLast = document.getElementById("btnLast");
+
+var isFirstLoad = true;
+//保存toast定时器ID，用来清除旧计时器
+var toastTimer = null;
+
+// 判断是否微信内置浏览器
+function isWeChat(){
+    return /MicroMessenger/i.test(navigator.userAgent);
+}
+// 判断是否PC环境
+function isPC(){
+    var ua = navigator.userAgent;
+    return !/(Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini)/i.test(ua);
+}
+
+// 自定义提示toast，修复快速点击提前消失，时长2500ms
+function showTip(text){
+    var toast = document.getElementById("tipToast");
+    // 如果上一个计时器还在运行，直接清除
+    if(toastTimer !== null){
+        clearTimeout(toastTimer);
+    }
+    toast.innerText = text;
+    toast.style.display="block";
+    toastTimer = setTimeout(function(){
+        toast.style.display="none";
+        toastTimer = null;
+    },2500);
+}
+
+// 移动端重置外层容器，铺满屏幕
+if(!isPC()){
+    document.querySelector(".wrap-all").style.maxWidth = "100%";
+    document.querySelector(".wrap-all").style.marginLeft = "0";
+    document.querySelector(".wrap-all").style.marginRight = "0";
+}
+
+function render(){
+    totalPage = Math.ceil(dataList.length / pageSize);
+    listContainer.innerHTML = "";
+    var start = (currentPage - 1) * pageSize;
+    var end = start + pageSize;
+    var slice = dataList.slice(start, end);
+    for(var i = 0; i < slice.length; i++){
+        var item = slice[i];
+        var div = document.createElement("div");
+        div.className = "item-card";
+        div.innerHTML = '<img class="item-img" src="'+item[0]+'" alt="">'
+            +'<div class="item-title">'+item[1]+'</div>'
+            +'<button class="download-btn" data-link="'+item[0]+'">下载</button>';
+        listContainer.appendChild(div);
+    }
+    pageText.innerText = "第"+currentPage+"页 | 共"+totalPage+"页";
+    btnLast.innerText = "第"+totalPage+"页";
+    pageInput.value = currentPage;
+    btnPrev.disabled = (currentPage === 1);
+    btnFirst.disabled = (currentPage === 1);
+    btnNext.disabled = (currentPage === totalPage);
+    btnLast.disabled = (currentPage === totalPage);
+
+    var btns = document.querySelectorAll(".download-btn");
+    for(var j=0;j<btns.length;j++){
+        btns[j].onclick = function(){
+            var link = this.getAttribute("data-link");
+            //微信环境使用自定义toast提示
+            if(isWeChat()){
+                showTip("您正在使用微信浏览本页面，如需下载图片，请长按图片并点击“保存到手机”。");
+                return;
+            }
+            //非微信执行下载
+            var a = document.createElement("a");
+            a.href = link;
+            a.setAttribute("download","");
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    }
+
+    if(!isFirstLoad){
+        window.scrollTo({top:0,behavior:"smooth"});
+    }else{
+        isFirstLoad = false;
+    }
+}
+function goPage(p){
+    var target = parseInt(p,10);
+    if(isNaN(target) || target <1 || target > totalPage){
+        pageInput.value = currentPage;
+        return;
+    }
+    currentPage = target;
+    render();
+}
+btnPrev.onclick = function(){goPage(currentPage-1);};
+btnNext.onclick = function(){goPage(currentPage+1);};
+btnFirst.onclick = function(){goPage(1);};
+btnLast.onclick = function(){goPage(totalPage);};
+pageInput.onchange = function(){goPage(this.value);};
+render();
+</script>
+</body>
+</html>
